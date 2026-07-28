@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>thegate</groupId>
   <artifactId>The_Gate</artifactId>
-  <version>3.0.3mc26.2</version>
+  <version>3.0.4mc26.2</version>
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
