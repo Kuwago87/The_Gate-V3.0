@@ -145,7 +145,7 @@ public class ArmorStand {
     }
 
     public void setCustomName(String text) {
-        this.meta.setCustomName(net.kyori.adventure.text.Component.text(text));
+        this.meta.setCustomName(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(text));
     }
 
     public void setCustomNameVisible(boolean visible) {
