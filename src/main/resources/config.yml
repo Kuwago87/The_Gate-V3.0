@@ -1,6 +1,6 @@
 #######################################
 #-------------------------------------#
-#-	   The Gate v0.2.8mc1.21.1	   	 -#
+#-	   The Gate v3.0.4mc1.26.2   	 -#
 #-------------------------------------#
 #######################################
 
@@ -49,7 +49,7 @@
 #	thegate.owner.editirismaterial								#
 #	thegate.owner.editidccode									#
 #	thegate.owner.useiris										#
-#   thegate.owner.gatedescriptioncommand						#
+#  thegate.owner.gatedescriptioncommand						#
 #	thegate.owner.gatenamecommand								#
 #	thegate.owner.gatecreatecommand								#
 #	thegate.owner.geterotatecommand								#
@@ -79,7 +79,7 @@
 # this plugin uses bStats
 # we use bStats to see how and where the plguin is used
 # all the inforamtion that is collected can be viewed here:
-# https://bstats.org/plugin/bukkit/The_Gate/7042
+# https://bstats.org/plugin/bukkit/The_Gate/32964
 
 # if you want to disable this go to the bStats folder in the Plugins folder and disable it in the config.yml
 # but we hope you leave it on :D
@@ -125,13 +125,13 @@ BungeeSettings:
 GateMaterial:
   #change the materials every NEW gate is created with
   #already existing gates will NOT change
-  Default-Ring: DEAD_BRAIN_CORAL_BLOCK
-  Default-Chevrons-Frame-Material: GRAY_CONCRETE
-  Default-Chevron-Bottom-Material: BLACK_CONCRETE
-  Default-Chevron-Light-Material-Off: ORANGE_CONCRETE
-  Default-Chevron-Light-Material-On: YELLOW_CONCRETE
+  Default-Ring: SOUL_SAND
+  Default-Chevrons-Frame-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Bottom-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Light-Material-Off: HONEY_BLOCK
+  Default-Chevron-Light-Material-On: SLIME_BLOCK
   Default-Horizon-Material: BLUE_STAINED_GLASS_PANE
-  Default-Iris-Material: GRAY_CARPET
+  Default-Iris-Material: RED_STAINED_GLASS
   
   GateSymbolMaterial: 
     - BAT_SPAWN_EGG
