@@ -1,0 +1,165 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  org.bukkit.Material
+ *  org.bukkit.Sound
+ */
+package thegate.main;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+
+public class Globals {
+    public static Material DefaultringMaterial;
+    public static Material Defaultchevrons_frameMaterial;
+    public static Material Defaultchevron_botMaterial;
+    public static Material Defaultchevron_lightMaterial;
+    public static Material Defaultchevron_lightMaterial_ON;
+    public static Material DefaulthorizonMaterial;
+    public static Material DefaultDHDMaterial;
+    public static final Set<Integer> GateBuilderUUID;
+    public static boolean DeadlyVortex;
+    public static boolean DeadlyIris;
+    public static boolean GateCanBreakBlocks;
+    public static boolean CreateBarrier;
+    public static int GateTime;
+    public static boolean UseDummyOwner;
+    public static String dummyOwnerName;
+    public static Material DefaultGateCreationTool;
+    public static Material DefaultGateEditTool;
+    public static Material DefaultAbydosCartouche;
+    public static Material DefaultGateCrystal;
+    public static Material DefaultIDCTransmitter;
+    public static Material DefaultIrisMaterial;
+    public static Sound DefaultGateActivateSound;
+    public static float DefaultGateActivateVolume;
+    public static float DefaultGateActivatePitch;
+    public static Sound DefaultGateAmbientSound;
+    public static float DefaultGateAmbientVolume;
+    public static float DefaultGateAmbientePitch;
+    public static Sound DefaultChevronLockSound;
+    public static float DefaultChevronLockVolume;
+    public static float DefaultChevronLockPitch;
+    public static Sound DefaultChevronOpenSound;
+    public static float DefaultChevronOpenVolume;
+    public static float DefaultChevronOpenPitch;
+    public static Sound DefaultSpinningSound;
+    public static float DefaultSpinningVolume;
+    public static float DefaultSpinningPitch;
+    public static Sound DefaultGateEnterSound;
+    public static float DefaultGateEnterVolume;
+    public static float DefaultGateEnterPitch;
+    public static Sound DefaultGateExitSound;
+    public static float DefaultGateExitVolume;
+    public static float DefaultGateExitPitch;
+    public static Material[] SymbolMaterial;
+    public static boolean MultiDile;
+    public static boolean AllowQuickDial;
+    public static int PlayerGateAmmount;
+    public static int VisibilityRadius;
+    public static int GateExclusionRadius;
+    public static boolean DisplayName;
+    public static boolean UseBungee;
+    public static String ServerName;
+    public static String SaveFromat;
+    public static String MySQLUserName;
+    public static String MySQLUserPassword;
+    public static String MySQLPath;
+    public static String playerTable;
+    public static String coownerTable;
+    public static String gatesTable;
+    public static String gatesCommandsTable;
+    public static int AutoSyncDatabase;
+    public static boolean MoreInfo;
+    public static Set<Material> excludeList;
+    public static int SelectionX;
+    public static int Selection_X;
+    public static int SelectionY;
+    public static int Selection_Y;
+    public static double Radius;
+    public static double DestructionDistance;
+    public static double DestructionDistanceMult;
+    public static HashMap<String, String> WorldNames;
+    public static HashMap<String, Boolean> WorldDefaultSpawn;
+    public static ArrayList<String> Networks;
+    public static float DialingSpeed;
+    public static int DialingAnimationTicks;
+    public static int IrisAnimaitonTicks;
+    public static double IrisSpeed;
+    public static double VortexSpeed;
+    public static boolean DoAnimation;
+    public static boolean DoDialing;
+    public static boolean DoVortex;
+    public static boolean DoHorizonEffect;
+    public static boolean DoIrisAnimaiton;
+    public static boolean AllowDialSuggestions;
+
+    static {
+        GateBuilderUUID = new HashSet<Integer>(Arrays.asList(-1238144815, 1762632487, -1202865366));
+        DeadlyVortex = false;
+        DeadlyIris = false;
+        GateCanBreakBlocks = false;
+        CreateBarrier = true;
+        GateTime = 300;
+        UseDummyOwner = false;
+        dummyOwnerName = "null";
+        DefaultGateCreationTool = Material.FEATHER;
+        DefaultGateEditTool = Material.BLAZE_ROD;
+        DefaultAbydosCartouche = Material.BOOK;
+        DefaultGateCrystal = Material.QUARTZ;
+        DefaultIDCTransmitter = Material.FIRE_CHARGE;
+        DefaultIrisMaterial = Material.GRAY_CARPET;
+        DefaultGateActivateVolume = 1.0f;
+        DefaultGateActivatePitch = 0.5f;
+        DefaultGateAmbientVolume = 1.0f;
+        DefaultGateAmbientePitch = 1.0f;
+        DefaultChevronLockVolume = 1.0f;
+        DefaultChevronLockPitch = 0.5f;
+        DefaultChevronOpenVolume = 1.0f;
+        DefaultChevronOpenPitch = 0.5f;
+        DefaultSpinningVolume = 0.8f;
+        DefaultSpinningPitch = 0.3f;
+        DefaultGateEnterVolume = 1.0f;
+        DefaultGateEnterPitch = 1.0f;
+        DefaultGateExitVolume = 1.0f;
+        DefaultGateExitPitch = 1.0f;
+        SymbolMaterial = new Material[16];
+        MultiDile = false;
+        AllowQuickDial = true;
+        PlayerGateAmmount = 5;
+        VisibilityRadius = 40;
+        GateExclusionRadius = 150;
+        DisplayName = false;
+        UseBungee = false;
+        ServerName = "0";
+        MoreInfo = true;
+        excludeList = new HashSet<Material>();
+        SelectionX = 12;
+        Selection_X = -12;
+        SelectionY = 4;
+        Selection_Y = -1;
+        Radius = 2.5;
+        DestructionDistance = 5.0;
+        DestructionDistanceMult = 0.8;
+        WorldNames = new HashMap();
+        WorldDefaultSpawn = new HashMap();
+        Networks = new ArrayList();
+        DialingAnimationTicks = 1;
+        IrisAnimaitonTicks = 1;
+        IrisSpeed = 1.0;
+        VortexSpeed = 5.0;
+        DoAnimation = true;
+        DoDialing = true;
+        DoVortex = true;
+        DoHorizonEffect = true;
+        DoIrisAnimaiton = true;
+        AllowDialSuggestions = true;
+    }
+}
+

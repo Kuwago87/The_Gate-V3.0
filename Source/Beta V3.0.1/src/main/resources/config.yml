@@ -1,0 +1,310 @@
+#######################################
+#-------------------------------------#
+#-	   The Gate v0.2.8mc1.21.1	   	 -#
+#-------------------------------------#
+#######################################
+
+#################################################################
+#---------------------------------------------------------------#
+#-              This Plugin uses some Permissions              -#
+#---------------------------------------------------------------#
+#																#
+#	thegate.admin.abydoscartouche								#
+#	thegate.admin.dialgate										#
+#	thegate.admin.creategate									#
+#	thegate.admin.editgate										#
+#	thegate.admin.repairgate									#
+#	thegate.admin.removegate									#
+#	thegate.admin.editallgates									#
+#	thegate.admin.reloadconfig									#
+#	thegate.admin.lockgate										#
+#	thegate.admin.setprivate									#
+#	thegate.admin.tptogate										#
+#	thegate.admin.editnetwork									#
+#	thegate.admin.editowner										#
+#	thegate.admin.editcoowner									#
+#	thegate.admin.editmaterial									#
+#	thegate.admin.breakdhd										#
+#	thegate.admin.ignoreiris									#
+#	thegate.admin.useiris										#
+#	thegate.admin.editidccode									#
+#	thegate.admin.editirismaterial								#
+#	thegate.admin.syncdatabase									#
+#   thegate.admin.gatedescriptioncommand						#
+#	thegate.admin.gatenamecommand								#
+#	thegate.admin.gatecreatecommand								#
+#	thegate.admin.geterotatecommand								#
+#	thegate.admin.gaterotatenearcommand							#
+#	thegate.admin.editgatecommands								#
+#																#
+#	thegate.owner.editgate										#
+#	thegate.owner.creategate									#
+#	thegate.owner.repairgate									#
+#	thegate.owner.removegate									#
+#	thegate.owner.editnetwork									#
+#	thegate.owner.lockgate										#
+#	thegate.owner.setprivate									#
+#	thegate.owner.tptogate										#
+#	thegate.owner.editmaterial									#
+#	thegate.owner.editirismaterial								#
+#	thegate.owner.editidccode									#
+#	thegate.owner.useiris										#
+#   thegate.owner.gatedescriptioncommand						#
+#	thegate.owner.gatenamecommand								#
+#	thegate.owner.gatecreatecommand								#
+#	thegate.owner.geterotatecommand								#
+#	thegate.owner.gaterotatenearcommand							#
+#	thegate.owner.editgateuseperms								#
+#																#
+#	thegate.user.dialgate										#
+#	thegate.user.canceldialing									#
+#	thegate.user.quickdial										#
+#	thegate.user.allowteleport									#
+#	thegate.user.abydoscartouche								#
+#	thegate.user.visiblenetwork.[networkname]					#
+#	thegate.user.gatetools										#
+#	thegate.user.idctransmitter									#
+#	thegate.user.viewgatename									#
+#	thegate.user.dialassist										#
+#	thegate.user.dial.<address>									#
+#	thegate.user.teleport.<address>								#
+#																#
+#---------------------------------------------------------------#
+#	 Link to Count Docu:										#
+#-   https://github.com/Badading/The_Gate/wiki/Permissions     -#
+#																#
+#---------------------------------------------------------------#
+#################################################################
+
+# this plugin uses bStats
+# we use bStats to see how and where the plguin is used
+# all the inforamtion that is collected can be viewed here:
+# https://bstats.org/plugin/bukkit/The_Gate/7042
+
+# if you want to disable this go to the bStats folder in the Plugins folder and disable it in the config.yml
+# but we hope you leave it on :D
+
+# Note:
+# all units of time are measured in server ticks so 20 ticks = 1 sec by default
+
+PluginSettings:
+  #you can choose between (SQLITE, MYSQL)
+  Savefile: SQLITE
+
+  #------------------------------------------
+  #If you use MySQL fill in these informations
+  Username: user
+  
+  Password: 12345
+  
+  #Sample path //address(ip or web address)/database
+  Path: //localhost:3306/the_gate
+  #-------------------------------------------
+
+  #Database Table names
+  TableGates: gates
+  TableCoOwner: coowner
+  TablePlayer: player
+  GateCommands: commands
+
+  #Addititonal for MySQL
+  #Syncronises the database after specified ticks (12000 ticks ~ 10 min)
+  #Set to -1 if you don't want auto sync
+  AutoSyncDatabase: 12000
+  
+  #Will show more information on /thegate or /tg command
+  ExtendedPlguinInfo: TRUE
+ 
+  
+BungeeSettings:
+  #If you want to use Bungee set this to true
+  UseBungee: FALSE
+  #The name assigned to this server in the Bungee network
+  ServerName: test
+
+GateMaterial:
+  #change the materials every NEW gate is created with
+  #already existing gates will NOT change
+  Default-Ring: SOUL_SAND
+  Default-Chevrons-Frame-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Bottom-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Light-Material-Off: HONEY_BLOCK
+  Default-Chevron-Light-Material-On: SLIME_BLOCK
+  Default-Horizon-Material: BLUE_STAINED_GLASS_PANE
+  Default-Iris-Material: RED_STAINED_GLASS
+  
+  GateSymbolMaterial: 
+    - BAT_SPAWN_EGG
+    - VINDICATOR_SPAWN_EGG
+    - DOLPHIN_SPAWN_EGG
+    - PANDA_SPAWN_EGG
+    - CAVE_SPIDER_SPAWN_EGG
+    - SKELETON_HORSE_SPAWN_EGG
+    - WOLF_SPAWN_EGG
+    - RAVAGER_SPAWN_EGG
+    - MULE_SPAWN_EGG
+    - SILVERFISH_SPAWN_EGG
+    - PILLAGER_SPAWN_EGG
+    - VILLAGER_SPAWN_EGG
+    - POLAR_BEAR_SPAWN_EGG
+    - WITHER_SKELETON_SPAWN_EGG
+    - ENDERMITE_SPAWN_EGG
+    - ENDERMAN_SPAWN_EGG
+  
+  Default-DHD-Material: LECTERN
+ 
+ToolCustomization:
+  #if the item is of value and players get permission to access these tools
+  #you may want to change them to prevent selling them as materials
+  #
+  #permission: thegate.admin.creategate
+  Default-GateCreationTool: FEATHER
+  Default-GateCrystal: QUARTZ
+  
+  #permission: thegate.admin.editallgates
+  #             thegate.owner.editgate
+  Default-GateEditTool: BLAZE_ROD
+  
+  #permission: thegate.admin.abydoscartouche
+  Default-AbydosCartouche: BOOK
+  
+  #Controls the iris remotely
+  Default-IDCTrancmitter: FIRE_CHARGE
+
+GateSettings:
+  #Radius in witch Gates become visible for Players
+  GateVisibilityRadius: 50
+
+  #Places Barrier Blocks around the gate so that it has a collider
+  PlaceBarrier: true
+  
+  #sets the amount of gates a player can own
+  UserOwnedGates: 5
+  
+  #will grant you access to the quick dial gui
+  AllowQuickDial: TRUE
+  
+  #will enable the suggestions while dialing
+  AllowDialSuggestions: TRUE
+  
+  #the vortex of the gate will kill you on activation when you stand to close
+  #will kill everyone who is to close regardless of gamemode
+  DeadlyVortex: FALSE
+  
+  #if iris is active the player will die when teleported
+  DeadlyIris: FALSE
+ 
+  #the gate will distroy blocks in front of it when dialing
+  #has still some bugs because of gate rotations
+  GateCanBreakBlocks: FALSE
+  
+  #these settings determine how the gate will destroy blocks
+  #only blocks in front of the gate are selected
+  DestrucitonSettings:
+    SelectionX: 12 #INT
+    Selection-X: -12 #INT
+    SelectionY: 4 #INT
+    Selection-Y: -1 #INT
+    Distance: 5 #DOUBLE
+    DistanceMult: 0.8 #DOUBLE
+    Radius: 2.5 #DOUBLE
+    
+    #You can add and remove blocks from this list as you see fit
+    ExcludedBlocks:
+      - AIR # this is only for performance
+      - GRASS_BLOCK
+      - BEDROCK
+      
+      #- WATER
+      #- LAVA
+      #- OBSIDIAN
+  
+  #Displays the gates name over the top most chevron
+  DisplayName: FALSE
+  
+  #sets the radius around a gate where no other gates can be placed
+  GateExclusionRadius: 150
+
+  #You can rename the Networks here or add more if you like
+  #Note: The network 'Global' will always be in the list of networks as the first network
+  Networks:
+    - Milkyway
+    - Pegasus
+    - Universe
+    - Ida
+  
+  #World names will be used as networks
+  #<custom-world-name>:<world-name>:<default-net-in-that-world (true/false)>
+  WorldsAsNetworks:
+    - Overworld:world:false
+    - Underworld:world_nether:false
+    - End:world_the_end:false
+    
+  #Allows you to set a dummy owner for the gate
+  UseDummyOwner: FALSE
+  
+  #The displayed name of the dummy owner
+  DummyOwnerName: World
+  
+  AnimationSettings:
+    
+    #Sets if the gate will show a dialing animation (Symbols spinning around the gate)
+    DoDialing: TRUE
+    
+    #Sets if the gate will show the vortex animation before activation (Horizon extending out of the gate)
+    DoVortex: TRUE
+    
+    #Sets if the gate will show the horizon effect(Wobble effect of the horizon)
+    #Deactivate if player experience rubber banding
+    DoHorizonEffect: TRUE
+    
+    #Sets if the gate will show the iris closing and opening animation
+    DoIrisAnimation: TRUE
+    
+    #Sets the tick interval for the animation update
+    DialingAnimationTicks: 1
+    
+    #Sets the tick interval for the animation update
+    IrisAnimaitonTicks: 1
+    
+    #Sets the opening and closing speed of the iris
+    IrisSpeed: 1.0
+    
+    #Sets the speed of the vortex animation
+    VortexSpeed: 5.0
+  
+    #Sets the speed the gate is dialing at (speeds larger than 6 might break the plugin but you can try :D)
+    #You can use decimal numbers for better adjustment
+    DialingSpeed: 2.0
+    
+    #how long should the gate stay open after dialing
+    ActiveTime: 600
+  
+GateSoundSettings:
+  Gate-Activate-Sound: ENTITY_EVOKER_CAST_SPELL
+  Gate-Activate-Volume: 1
+  Gate-Activate-Pitch: 0.5
+  
+  Gate-Ambient-Sound: BLOCK_WATER_AMBIENT
+  Gate-Ambient-Volume: 1
+  Gate-Ambient-Pitch: 1
+  
+  Gate-ChevronOpen-Sound: BLOCK_PISTON_EXTEND
+  Gate-ChevronOpen-Volume: 1
+  Gate-ChevronOpen-Pitch: 0.5
+  
+  Gate-ChevronLock-Sound: BLOCK_PISTON_CONTRACT
+  Gate-ChevronLock-Volume: 1
+  Gate-ChevronLock-Pitch: 0.5
+
+  Gate-DialingAmbient-Sound: ENTITY_MINECART_RIDING
+  Gate-DialingAmbient-Volume: 0.8
+  Gate-DialingAmbient-Pitch: 0.3
+  
+  Gate-Enter-Sound: AMBIENT_UNDERWATER_ENTER
+  Gate-Enter-Volume: 1
+  Gate-Enter-Pitch: 1
+  
+  Gate-Exit-Sound: AMBIENT_UNDERWATER_EXIT
+  Gate-Exit-Volume: 1
+  Gate-Exit-Pitch: 1
