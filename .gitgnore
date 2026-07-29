@@ -1,6 +1,0 @@
-target/
-*.class
-.idea/
-.vscode/
-*.iml
-cp.txt
