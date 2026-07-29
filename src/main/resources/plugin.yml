@@ -1,4 +1,4 @@
-name: The_GateV3
+name: The_Gate
 version: 3.0.5mc26.2
 main: thegate.main.TheGateMain
 load: POSTWORLD
