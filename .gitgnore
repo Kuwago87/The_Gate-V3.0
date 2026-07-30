@@ -1,7 +1,0 @@
-target/
-*.class
-.idea/
-.vscode/
-*.iml
-cp.txt
-apply-my-settings.ps1
