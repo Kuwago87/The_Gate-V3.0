@@ -252,7 +252,7 @@ PluginMessageListener {
     }
 
     public void bStats() {
-        int PluginIDBStats = 7042;
+        int PluginIDBStats = 32964;
         Metrics metrics = new Metrics(this, PluginIDBStats);
         metrics.addCustomChart(new Metrics.SimplePie("use_bungee", new Callable<String>(){
 

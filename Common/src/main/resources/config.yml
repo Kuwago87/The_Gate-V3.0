@@ -1,6 +1,6 @@
 #######################################
 #-------------------------------------#
-#-	   The Gate v0.2.8mc1.21.1	   	 -#
+#-	   The Gate v3.0.6mc1.26.2	   	 -#
 #-------------------------------------#
 #######################################
 
@@ -30,7 +30,7 @@
 #	thegate.admin.editidccode									#
 #	thegate.admin.editirismaterial								#
 #	thegate.admin.syncdatabase									#
-#   thegate.admin.gatedescriptioncommand						#
+# thegate.admin.gatedescriptioncommand						#
 #	thegate.admin.gatenamecommand								#
 #	thegate.admin.gatecreatecommand								#
 #	thegate.admin.geterotatecommand								#
@@ -49,7 +49,7 @@
 #	thegate.owner.editirismaterial								#
 #	thegate.owner.editidccode									#
 #	thegate.owner.useiris										#
-#   thegate.owner.gatedescriptioncommand						#
+# thegate.owner.gatedescriptioncommand						#
 #	thegate.owner.gatenamecommand								#
 #	thegate.owner.gatecreatecommand								#
 #	thegate.owner.geterotatecommand								#
@@ -125,13 +125,13 @@ BungeeSettings:
 GateMaterial:
   #change the materials every NEW gate is created with
   #already existing gates will NOT change
-  Default-Ring: DEAD_BRAIN_CORAL_BLOCK
-  Default-Chevrons-Frame-Material: GRAY_CONCRETE
-  Default-Chevron-Bottom-Material: BLACK_CONCRETE
-  Default-Chevron-Light-Material-Off: ORANGE_CONCRETE
-  Default-Chevron-Light-Material-On: YELLOW_CONCRETE
+  Default-Ring: SOUL_SAND
+  Default-Chevrons-Frame-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Bottom-Material: LIGHT_GRAY_TERRACOTTA
+  Default-Chevron-Light-Material-Off: HONEY_BLOCK
+  Default-Chevron-Light-Material-On: SLIME_BLOCK
   Default-Horizon-Material: BLUE_STAINED_GLASS_PANE
-  Default-Iris-Material: GRAY_CARPET
+  Default-Iris-Material: RED_STAINED_GLASS
   
   GateSymbolMaterial: 
     - BAT_SPAWN_EGG
@@ -176,7 +176,7 @@ GateSettings:
   GateVisibilityRadius: 50
 
   #Places Barrier Blocks around the gate so that it has a collider
-  PlaceBarrier: FALSE
+  PlaceBarrier: TRUE
   
   #sets the amount of gates a player can own
   UserOwnedGates: 5
