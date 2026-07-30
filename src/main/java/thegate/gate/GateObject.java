@@ -303,7 +303,6 @@ public class GateObject {
     public void removePlayerInRangeDisconnect(Player p) {
         if (this.PlayerInRange.contains(p)) {
             this.PlayerInRange.remove(p);
-            this.Vanish(p);
         }
     }
 

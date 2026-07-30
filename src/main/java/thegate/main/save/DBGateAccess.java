@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -85,19 +84,13 @@ public class DBGateAccess {
                     }
                     gates.add(obj);
                 }
-                boolean finalNoWorld = noWorld;
-                Bukkit.getScheduler().runTask((org.bukkit.plugin.Plugin)mainGate, () -> {
-                    GateManager.addGate(gates);
-                    for (Player online : Bukkit.getOnlinePlayers()) {
-                        GateManager.GateInRadius(online, Globals.VisibilityRadius);
-                    }
-                    if (finalNoWorld) {
-                        TheGateMain.theGateMain.getLogger().log(Level.WARNING, "[The_Gate] Warning: World not found, if you are using any world managment Plugins please contect the auther of the plugin (The Gate) so the managment plugin can be added to the list of dependencies");
-                    }
-                });
+                GateManager.addGate(gates);
             }
             catch (SQLException e) {
                 e.printStackTrace();
+            }
+            if (noWorld) {
+                TheGateMain.theGateMain.getLogger().log(Level.WARNING, "[The_Gate] Warning: World not found, if you are using any world managment Plugins please contect the auther of the plugin (The Gate) so the managment plugin can be added to the list of dependencies");
             }
         }).start();
     }

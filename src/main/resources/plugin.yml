@@ -1,5 +1,5 @@
 name: The_Gate
-version: 3.0.5mc26.2
+version: 0.3.0mc26.2
 main: thegate.main.TheGateMain
 load: POSTWORLD
 authors: ['EndMySuffering', 'donner', 'lukas123313']
@@ -15,3 +15,7 @@ commands:
     usage: /thegate [reload|help|syncdb|gatedescription|gatename|create|rotate]
     aliases: [tg]
 
+softdepend:
+  - Multiverse-Core
+  - IridiumSkyblock
+  - Essentials
