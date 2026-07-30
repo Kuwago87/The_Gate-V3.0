@@ -1,5 +1,5 @@
 name: The_Gate
-version: 3.0.6mc26.2spigt
+version: 3.0.6mc26.2-spig
 main: thegate.main.TheGateMain
 load: POSTWORLD
 authors: ['EndMySuffering', 'donner', 'lukas123313']

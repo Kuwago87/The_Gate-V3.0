@@ -6,7 +6,7 @@
 
     <groupId>thegate</groupId>
     <artifactId>The_Gate</artifactId>
-    <version>3.0.6mc26.2spigt</version>
+    <version>3.0.6mc26.2-spig</version>
     <packaging>jar</packaging>
 
     <properties>
