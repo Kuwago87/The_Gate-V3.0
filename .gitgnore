@@ -4,3 +4,4 @@ target/
 .vscode/
 *.iml
 cp.txt
+apply-my-settings.ps1
