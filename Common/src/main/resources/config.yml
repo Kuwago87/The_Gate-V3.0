@@ -189,10 +189,10 @@ GateSettings:
   
   #the vortex of the gate will kill you on activation when you stand to close
   #will kill everyone who is to close regardless of gamemode
-  DeadlyVortex: FALSE
+  DeadlyVortex: TRUE
   
   #if iris is active the player will die when teleported
-  DeadlyIris: FALSE
+  DeadlyIris: TRUE
  
   #the gate will distroy blocks in front of it when dialing
   #has still some bugs because of gate rotations
@@ -244,7 +244,7 @@ GateSettings:
   UseDummyOwner: FALSE
   
   #The displayed name of the dummy owner
-  DummyOwnerName: World
+  DummyOwnerName: Ancients
   
   AnimationSettings:
     
