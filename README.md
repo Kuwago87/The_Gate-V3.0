@@ -22,6 +22,6 @@ Spigot: https://www.spigotmc.org/resources/the-gate.70247/
 ------------------------------
 The_Gate-V3.0 (minecraft 1.26.2+)
 
-Modrinth: https://modrinth.com/plugin/the-gate
+Modrinth: https://modrinth.com/plugin/the-gate (placeHolder)
 
 You can contact me here: https://github.com/Kuwago87/The_Gate-V3.0/issues
