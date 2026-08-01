@@ -15,11 +15,9 @@ https://github.com/Kuwago87/The_Gate-V3.0/releases
 
 You can contact me here:
 
-Discord: https://discord.gg/s9EJxambbS
-
 GitHub: https://github.com/Kuwago87/The_Gate-V3.0/issues
 
-Modrinth: https://modrinth.com/plugin/the-gate
+Modrinth: https://modrinth.com/plugin/the-gate (placeHolder)
 
  
  ## Original Plugin (minecraft 1.15 to 1.21.1 )
