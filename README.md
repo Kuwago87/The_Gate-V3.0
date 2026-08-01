@@ -27,5 +27,6 @@ Modrinth: https://modrinth.com/plugin/the-gate (placeHolder)
 You can contact me here: https://github.com/Kuwago87/The_Gate-V3.0/issues
 
 Checkout my other Minecraft project:
+
 Energy Force Field (a Paper Plugin)
 https://github.com/Kuwago87/Energy-Force-Field
