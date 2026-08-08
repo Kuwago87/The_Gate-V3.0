@@ -1,8 +1,11 @@
 # The_Gate-V3.0
 
 A simple Rewrite of the Gate plugin
+
 Paper & Sipgot 26.2 releases 
+
 https://github.com/Kuwago87/The_Gate-V3.0/releases
+
  ----------------------
  original Plugin:
  
