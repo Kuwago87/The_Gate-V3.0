@@ -2,6 +2,10 @@
 
 A simple Rewrite of the Gate plugin
 
+Paper & Sipgot 26.2 releases 
+
+https://github.com/Kuwago87/The_Gate-V3.0/releases
+
  ----------------------
  original Plugin:
  
@@ -25,3 +29,9 @@ The_Gate-V3.0 (minecraft 1.26.2+)
 Modrinth: https://modrinth.com/plugin/the-gate (placeHolder)
 
 You can contact me here: https://github.com/Kuwago87/The_Gate-V3.0/issues
+
+# Checkout my other Minecraft project:
+
+Energy Force Field (a Paper Plugin)
+
+https://github.com/Kuwago87/Energy-Force-Field
