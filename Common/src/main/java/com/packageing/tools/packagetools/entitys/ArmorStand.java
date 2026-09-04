@@ -68,10 +68,10 @@ public class ArmorStand {
         ArmorStand astand = new ArmorStand(wrapperEntity);
         astand.bodyRotation = rotBody;
         astand.setLocation(location.getX(), location.getY(), location.getZ());
-        astand.setCustomNameVisible(false);
+        astand.setCustomNameVisible(true);
         astand.setHeadRotation(headRotationX, headRotationY, headRotationZ);
-        astand.setSmall(false);
-        astand.setInvisible(true);
+        astand.setSmall(false); // temp //
+        // astand.setInvisible(true);
         astand.setHasBasePlate(false);
 
         Location peLoc = new Location(location.getX(), location.getY(), location.getZ(), rotBody, 0.0f);

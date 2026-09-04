@@ -125,7 +125,7 @@ PluginMessageListener {
             this.getLogger().log(Level.WARNING, "For a compatible version got to the version history on the spigot page.");
             this.getLogger().log(Level.WARNING, "For more information, requests or other support you could join our discord:");
             this.getLogger().log(Level.WARNING, " ");
-            this.getLogger().log(Level.WARNING, "https://discord.gg/RW4C7bn");
+            this.getLogger().log(Level.WARNING, "https://discord.gg/w5FmUb6DrH");
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "----------------------------------------------------------------------------");
         }
@@ -154,7 +154,7 @@ PluginMessageListener {
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "For more information, requests or other support you could join our discord:");
             this.getLogger().log(Level.WARNING, " ");
-            this.getLogger().log(Level.WARNING, "https://discord.gg/RW4C7bn");
+            this.getLogger().log(Level.WARNING, "https://discord.gg/w5FmUb6DrH");
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "----------------------------------------------------------------------------");
             missingConfig = true;
@@ -174,7 +174,7 @@ PluginMessageListener {
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "For more information, requests or other support you could join our discord:");
             this.getLogger().log(Level.WARNING, " ");
-            this.getLogger().log(Level.WARNING, "https://discord.gg/RW4C7bn");
+            this.getLogger().log(Level.WARNING, "https://discord.gg/w5FmUb6DrH");
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "-------------------------------------------------------------------------------");
             missingConfig = true;

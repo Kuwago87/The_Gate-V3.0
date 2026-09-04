@@ -19,7 +19,7 @@ https://github.com/Badading/The_Gate/
 
 You can contact us here:
 
-Discord: https://discord.gg/RW4C7bn
+Discord: https://discord.gg/w5FmUb6DrH
 
 Spigot: https://www.spigotmc.org/resources/the-gate.70247/
 
