@@ -37,6 +37,7 @@ public class Globals {
     public static Material DefaultGateCrystal;
     public static Material DefaultIDCTransmitter;
     public static Material DefaultIrisMaterial;
+    public static final java.util.Map<Material, String> BedrockHeadTextures = new HashMap<>();
     public static Sound DefaultGateActivateSound;
     public static float DefaultGateActivateVolume;
     public static float DefaultGateActivatePitch;

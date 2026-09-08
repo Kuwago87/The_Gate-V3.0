@@ -26,6 +26,19 @@ public class Config {
         Material DHM = Material.getMaterial(config.getString("GateMaterial.Default-Horizon-Material"));
         Material DDHDM = Material.getMaterial(config.getString("GateMaterial.Default-DHD-Material"));
         Globals.DefaultIrisMaterial = Material.getMaterial(config.getString("GateMaterial.Default-Iris-Material"));
+
+        Globals.BedrockHeadTextures.clear();
+        org.bukkit.configuration.ConfigurationSection bedrockTextures = config.getConfigurationSection("GateMaterial.BedrockHeadTextures");
+        if (bedrockTextures != null) {
+            for (String key : bedrockTextures.getKeys(false)) {
+                String value = bedrockTextures.getString(key);
+                Material mat = Material.getMaterial(key);
+                if (mat != null && value != null && !value.isBlank()) {
+                    Globals.BedrockHeadTextures.put(mat, value);
+                }
+            }
+        }
+
         if (DRM != null) {
             Globals.DefaultringMaterial = DRM;
         } else {

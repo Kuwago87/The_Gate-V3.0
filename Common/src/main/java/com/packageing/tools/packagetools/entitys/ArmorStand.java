@@ -10,8 +10,27 @@ package com.packageing.tools.packagetools.entitys;
  *
  * This version is a client-side-only fake entity built on PacketEvents + EntityLib instead, which is the
  * public, version-abstracted way to do the same thing. The public method signatures below are kept
- * IDENTICAL to the old class on purpose, so nothing in thegate.* (GatePackages, GateChevron, IrisPart,
- * CreateGate, the animation classes, TheGateMain) needs to change.
+ * IDENTICAL to the old class on purpose, so nothing in thegate.* (GateChevron, IrisPart, CreateGate, the
+ * animation classes, TheGateMain) needs to change - EXCEPT getEntityID(), which is now getJavaEntityID()/
+ * getBedrockEntityID() (see the twin-entity note below), so the two call sites that used getEntityID()
+ * were updated (GatePackages.addEntityID, and the one-off test stand in TheGateMain).
+ *
+ * TWIN-ENTITY DESIGN (Bedrock compatibility):
+ * Bedrock (via Geyser) does not render equipment on an invisible entity at all, and separately cannot
+ * render an arbitrary block in an armor stand's head slot under ANY circumstance (Geyser issues #1251 and
+ * #2717, both confirmed "Can't Fix" - client-side Bedrock limitations, not something packets can work
+ * around). So Bedrock players are always shown a visible-but-textureless stand instead of the clean
+ * invisible+equipped look Java gets.
+ *
+ * An earlier version of this class tried to get ONE shared fake entity to report two different states
+ * (invisible for Java, visible for Bedrock) by mutating its metadata per-viewer. That relied on internals
+ * of EntityLib's dirty-tracking/packet-building that couldn't be confirmed from the library's public
+ * GitHub history, and broke in different ways twice. This version avoids that entirely: EVERY gate part is
+ * actually TWO fake entities at the same location - `javaEntity` (always invisible, permanent) and
+ * `bedrockEntity` (always visible, permanent). Neither entity's state ever changes based on who's viewing
+ * it - each is just the plain, well-supported "one entity, one constant state, N viewers" use case
+ * EntityLib is built for. A player is routed to exactly one of the two via BedrockCompat.isBedrock(p) and
+ * only ever added as a viewer of that one.
  *
  * NOTE FOR TONY: entity creation, spawn/despawn/teleport, and the ArmorStandMeta pose/rotation setters
  * below are all confirmed against EntityLib's actual source on GitHub (WrapperEntity.java and
@@ -40,8 +59,14 @@ import java.util.List;
 
 public class ArmorStand {
 
-    private final WrapperEntity entity;
-    private final ArmorStandMeta meta;
+    // Java-facing twin: always invisible (equipment still renders floating on Java - no Bedrock limitation there).
+    private final WrapperEntity javaEntity;
+    private final ArmorStandMeta javaMeta;
+
+    // Bedrock-facing twin: always visible, forced permanently in the constructor below and never toggled -
+    // there is no per-viewer state to manage here at all, which is the whole point of the twin design.
+    private final WrapperEntity bedrockEntity;
+    private final ArmorStandMeta bedrockMeta;
 
     private float bodyRotation = 0.0f;
     private double locationX = 0.0;
@@ -58,55 +83,65 @@ public class ArmorStand {
     private ItemStack legArmor = null;
     private ItemStack feetArmor = null;
 
-    private ArmorStand(WrapperEntity entity) {
-        this.entity = entity;
-        this.meta = (ArmorStandMeta) entity.getEntityMeta();
+    private ArmorStand(WrapperEntity javaEntity, WrapperEntity bedrockEntity) {
+        this.javaEntity = javaEntity;
+        this.javaMeta = (ArmorStandMeta) javaEntity.getEntityMeta();
+        this.bedrockEntity = bedrockEntity;
+        this.bedrockMeta = (ArmorStandMeta) bedrockEntity.getEntityMeta();
+        this.bedrockMeta.setInvisible(false); // permanent - see class-level note. Never touched again after this.
     }
 
     public static ArmorStand CreateArmorStand(org.bukkit.Location location, float headRotationX, float headRotationY, float headRotationZ, float rotBody) {
-        WrapperEntity wrapperEntity = new WrapperEntity(EntityTypes.ARMOR_STAND);
-        ArmorStand astand = new ArmorStand(wrapperEntity);
+        WrapperEntity javaWrapper = new WrapperEntity(EntityTypes.ARMOR_STAND);
+        WrapperEntity bedrockWrapper = new WrapperEntity(EntityTypes.ARMOR_STAND);
+        ArmorStand astand = new ArmorStand(javaWrapper, bedrockWrapper);
         astand.bodyRotation = rotBody;
         astand.setLocation(location.getX(), location.getY(), location.getZ());
-        astand.setCustomNameVisible(true);
+        astand.setCustomNameVisible(false);
         astand.setHeadRotation(headRotationX, headRotationY, headRotationZ);
-        astand.setSmall(false); // temp //
-        // astand.setInvisible(true);
+        astand.setSmall(false);
+        astand.setInvisible(true); // only ever affects javaEntity - bedrockEntity was already forced visible above
         astand.setHasBasePlate(false);
 
         Location peLoc = new Location(location.getX(), location.getY(), location.getZ(), rotBody, 0.0f);
-        wrapperEntity.spawn(peLoc);
+        javaWrapper.spawn(peLoc);
+        bedrockWrapper.spawn(peLoc);
 
         return astand;
     }
 
     /** Sends the spawn + equipment + metadata packets to one player. Replaces PackageManager.SendSpawnPackage. */
     public void showTo(Player p) {
-        this.entity.addViewer(p.getUniqueId());
-        this.pushEquipment(p);
-        this.pushMeta();
+        WrapperEntity target = BedrockCompat.isBedrock(p) ? this.bedrockEntity : this.javaEntity;
+        target.addViewer(p.getUniqueId());
+        this.pushEquipment(p, target);
+        target.refresh();
     }
 
     /** Removes this fake entity from one player's client. Replaces PackageManager.SendDespawnPackage. */
     public void hideFrom(Player p) {
-        this.entity.removeViewer(p.getUniqueId());
+        WrapperEntity target = BedrockCompat.isBedrock(p) ? this.bedrockEntity : this.javaEntity;
+        target.removeViewer(p.getUniqueId());
     }
 
     /** Re-sends equipment + metadata to a player who can already see this entity. Replaces PackageManager.SendUpdate. */
     public void updateFor(Player p) {
-        this.pushEquipment(p);
-        this.pushMeta();
+        WrapperEntity target = BedrockCompat.isBedrock(p) ? this.bedrockEntity : this.javaEntity;
+        this.pushEquipment(p, target);
+        target.refresh();
     }
 
-    /** Moves the entity and re-sends metadata + a teleport packet. Replaces PackageManager.SendTeleport. */
+    /**
+     * Moves the entity and re-sends metadata + a teleport packet. Replaces PackageManager.SendTeleport.
+     * Note: the `p` parameter has always been unused here (kept only for call-site compatibility) - location
+     * is not a per-viewer thing, so both twins move together regardless of who's asking.
+     */
     public void teleportFor(Player p) {
-        this.pushMeta();
-        this.entity.teleport(new Location(this.locationX, this.locationY, this.locationZ, this.bodyRotation, 0.0f));
-    }
-
-    private void pushMeta() {
-        // WrapperEntity#refresh() sends the current metadata (built from the ArmorStandMeta setters below) to viewers.
-        this.entity.refresh();
+        this.javaEntity.refresh();
+        this.bedrockEntity.refresh();
+        Location peLoc = new Location(this.locationX, this.locationY, this.locationZ, this.bodyRotation, 0.0f);
+        this.javaEntity.teleport(peLoc);
+        this.bedrockEntity.teleport(peLoc);
     }
 
     /*
@@ -116,7 +151,7 @@ public class ArmorStand {
      * SpigotConversionUtil - PacketEvents' internal ItemStack has a private constructor as of 2.11+,
      * so this conversion call isn't optional.
      */
-    private void pushEquipment(Player p) {
+    private void pushEquipment(Player p, WrapperEntity target) {
         List<Equipment> equipmentList = new ArrayList<>();
         if (this.mainHand != null) equipmentList.add(new Equipment(EquipmentSlot.MAIN_HAND, SpigotConversionUtil.fromBukkitItemStack(this.mainHand)));
         if (this.offHand != null) equipmentList.add(new Equipment(EquipmentSlot.OFF_HAND, SpigotConversionUtil.fromBukkitItemStack(this.offHand)));
@@ -124,9 +159,20 @@ public class ArmorStand {
         if (this.legArmor != null) equipmentList.add(new Equipment(EquipmentSlot.LEGGINGS, SpigotConversionUtil.fromBukkitItemStack(this.legArmor)));
         if (this.bodyArmor != null) equipmentList.add(new Equipment(EquipmentSlot.CHEST_PLATE, SpigotConversionUtil.fromBukkitItemStack(this.bodyArmor)));
         ItemStack head = this.headMaterial != null ? this.headMaterial : new ItemStack(Material.AIR);
+        // Bedrock cannot render an arbitrary block in the head slot at all (confirmed unfixable Geyser
+        // limitation - see the class-level note above). If this exact material has a texture configured in
+        // BedrockHeadTextures, swap in a custom-textured skull for the Bedrock twin only; Java keeps the
+        // plain block either way, and anything not covered in config just falls back to the plain block on
+        // Bedrock too (today's textureless-but-visible behavior).
+        if (target == this.bedrockEntity && head.getType() != Material.AIR) {
+            String textureValue = thegate.main.Globals.BedrockHeadTextures.get(head.getType());
+            if (textureValue != null) {
+                head = HeadTextureFactory.build(textureValue);
+            }
+        }
         equipmentList.add(new Equipment(EquipmentSlot.HELMET, SpigotConversionUtil.fromBukkitItemStack(head)));
 
-        WrapperPlayServerEntityEquipment packet = new WrapperPlayServerEntityEquipment(this.entity.getEntityId(), equipmentList);
+        WrapperPlayServerEntityEquipment packet = new WrapperPlayServerEntityEquipment(target.getEntityId(), equipmentList);
         PacketEvents.getAPI().getPlayerManager().sendPacket(p, packet);
     }
 
@@ -134,22 +180,27 @@ public class ArmorStand {
         this.headX = x;
         this.headY = y;
         this.headZ = z;
-        this.meta.setHeadRotation(new Vector3f(x, y, z));
+        this.javaMeta.setHeadRotation(new Vector3f(x, y, z));
+        this.bedrockMeta.setHeadRotation(new Vector3f(x, y, z));
     }
 
     public void setLocation(double x, double y, double z) {
         this.locationX = x;
         this.locationY = y;
         this.locationZ = z;
-        this.entity.teleport(new Location(x, y, z, this.bodyRotation, 0.0f));
+        Location peLoc = new Location(x, y, z, this.bodyRotation, 0.0f);
+        this.javaEntity.teleport(peLoc);
+        this.bedrockEntity.teleport(peLoc);
     }
 
     public void setCustomName(String text) {
-        this.meta.setCustomName(net.kyori.adventure.text.Component.text(text));
+        this.javaMeta.setCustomName(net.kyori.adventure.text.Component.text(text));
+        this.bedrockMeta.setCustomName(net.kyori.adventure.text.Component.text(text));
     }
 
     public void setCustomNameVisible(boolean visible) {
-        this.meta.setCustomNameVisible(visible);
+        this.javaMeta.setCustomNameVisible(visible);
+        this.bedrockMeta.setCustomNameVisible(visible);
     }
 
     public double getLocationX() { return this.locationX; }
@@ -160,10 +211,26 @@ public class ArmorStand {
         return new org.bukkit.util.Vector(this.locationX, this.locationY, this.locationZ);
     }
 
-    public void setSmall(boolean isSmall) { this.meta.setSmall(isSmall); }
-    public void setHasBasePlate(boolean hasBasePlate) { this.meta.setHasNoBasePlate(!hasBasePlate); }
-    public void SetShowArms(boolean showarms) { this.meta.setHasArms(showarms); }
-    public void setNoGravity(boolean noGravity) { this.entity.setHasNoGravity(noGravity); }
+    public void setSmall(boolean isSmall) {
+        this.javaMeta.setSmall(isSmall);
+        this.bedrockMeta.setSmall(isSmall);
+    }
+
+    public void setHasBasePlate(boolean hasBasePlate) {
+        this.javaMeta.setHasNoBasePlate(!hasBasePlate);
+        this.bedrockMeta.setHasNoBasePlate(!hasBasePlate);
+    }
+
+    public void SetShowArms(boolean showarms) {
+        this.javaMeta.setHasArms(showarms);
+        this.bedrockMeta.setHasArms(showarms);
+    }
+
+    public void setNoGravity(boolean noGravity) {
+        this.javaEntity.setHasNoGravity(noGravity);
+        this.bedrockEntity.setHasNoGravity(noGravity);
+    }
+
     /*
      * setInvisible/setCustomName/setCustomNameVisible below are still an educated guess - they should live
      * on the base me.tofaa.entitylib.meta.EntityMeta class (every entity has these), but I haven't been able
@@ -171,8 +238,11 @@ public class ArmorStand {
      * If mvn package errors on these three specifically, grab me the source of
      * api/src/main/java/me/tofaa/entitylib/meta/EntityMeta.java the same way you did for the other two files
      * and I'll fix them the same way.
+     *
+     * This ONLY ever applies to javaEntity now - bedrockEntity's meta was permanently forced to visible in
+     * the constructor and must never be touched again, by design (see the class-level twin-entity note).
      */
-    public void setInvisible(boolean isInvisible) { this.meta.setInvisible(isInvisible); }
+    public void setInvisible(boolean isInvisible) { this.javaMeta.setInvisible(isInvisible); }
 
     public float getHeadX() { return this.headX; }
     public float getHeadY() { return this.headY; }
@@ -203,10 +273,18 @@ public class ArmorStand {
     public ItemStack getFeetArmor() { return this.feetArmor; }
     public void setFeetArmor(ItemStack feetArmor) { this.feetArmor = feetArmor; }
 
-    public int getEntityID() { return this.entity.getEntityId(); }
+    /**
+     * Two IDs now, one per twin - see the class-level twin-entity note. Call sites that used to collect a
+     * single getEntityID() (GatePackages.addEntityID, and the one-off test stand in TheGateMain) now collect
+     * BOTH. This is safe everywhere those IDs are later used for despawn-by-ID (GateObject.Vanish,
+     * WooshAnimation.Remove): those loops just call removeViewer(uuid) for every ID in the list, which is a
+     * harmless no-op for whichever twin that particular player was never viewing.
+     */
+    public int getJavaEntityID() { return this.javaEntity.getEntityId(); }
+    public int getBedrockEntityID() { return this.bedrockEntity.getEntityId(); }
 
-    public void remove() { this.entity.remove(); }
-
-    /** package-visible so PackageManager (the thin static facade kept for call-site compatibility) can reach it */
-    WrapperEntity getWrapperEntity() { return this.entity; }
+    public void remove() {
+        this.javaEntity.remove();
+        this.bedrockEntity.remove();
+    }
 }

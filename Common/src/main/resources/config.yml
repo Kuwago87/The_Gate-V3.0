@@ -152,6 +152,25 @@ GateMaterial:
     - ENDERMAN_SPAWN_EGG
   
   Default-DHD-Material: LECTERN
+
+  # Bedrock (via Geyser) cannot render an arbitrary block placed in an armor stand's head slot at all -
+  # this is a confirmed, unfixable client-side limitation (see GeyserMC/Geyser#2717 and #1251), not
+  # something this plugin can work around with packets. As a workaround, Bedrock players are shown a
+  # custom-textured player skull instead of the plain block, for any material below that has a texture
+  # value configured. Leave a value blank to fall back to the plain (textureless-but-visible) armor
+  # stand for that material instead - which is what happens today for anything not listed here at all.
+  #
+  # To get a Value string for a block: go to https://minecraft-heads.com, search the block's name (e.g.
+  # "soul sand"), open its page, and copy the string from the "Value" field near the bottom of the page.
+  # These correspond to the Default-*-Material values above - if you change a gate's material to
+  # something not listed here, that material just won't be texture-corrected on Bedrock.
+  BedrockHeadTextures:
+    SOUL_SAND: ""
+    LIGHT_GRAY_TERRACOTTA: ""
+    HONEY_BLOCK: ""
+    SLIME_BLOCK: ""
+    BLUE_STAINED_GLASS_PANE: ""
+    RED_STAINED_GLASS: ""
  
 ToolCustomization:
   #if the item is of value and players get permission to access these tools

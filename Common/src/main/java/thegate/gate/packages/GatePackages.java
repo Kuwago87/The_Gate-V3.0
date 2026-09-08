@@ -40,7 +40,8 @@ public class GatePackages {
     }
 
     public void addEntityID(ArmorStand stand) {
-        this.entityIDs.add(stand.getEntityID());
+        this.entityIDs.add(stand.getJavaEntityID());
+        this.entityIDs.add(stand.getBedrockEntityID());
     }
 
     public void Display(Player p) {

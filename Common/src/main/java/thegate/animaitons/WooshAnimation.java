@@ -253,7 +253,8 @@ extends BukkitRunnable {
         for (Set<ArmorStand> set : this.horizon.values()) {
             for (ArmorStand s : set) {
                 for (Player p : this.gate.getPlayerInRange()) {
-                    PackageManager.SendDespawnPackage(s.getEntityID(), p);
+                    PackageManager.SendDespawnPackage(s.getJavaEntityID(), p);
+                    PackageManager.SendDespawnPackage(s.getBedrockEntityID(), p);
                 }
             }
         }

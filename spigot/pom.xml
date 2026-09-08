@@ -6,7 +6,7 @@
 
     <groupId>thegate</groupId>
     <artifactId>The_Gate</artifactId>
-    <version>3.0.6mc26.2-spig</version>
+    <version>3.0.10.01mc26.2-spig</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -62,6 +62,29 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
+        <!-- Geyser API - only needed for the optional Bedrock-visibility compatibility check in BedrockCompat -->
+        <repository>
+            <id>opencollab-snapshot-repo</id>
+            <url>https://repo.opencollab.dev/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- Geyser's own transitive deps (org.geysermc.api:base-api, org.cloudburstmc.math:immutable)
+             are RELEASE artifacts and live on the separate maven-releases host, not maven-snapshots. -->
+        <repository>
+            <id>opencollab-release-repo</id>
+            <url>https://repo.opencollab.dev/maven-releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -92,6 +115,15 @@
             <artifactId>spigot</artifactId>
             <version>${entitylib.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Geyser API - only used (optionally, guarded) by BedrockCompat to detect Bedrock viewers.
+             The_Gate does not require Geyser to be installed; this is compile-only, never shaded. -->
+        <dependency>
+            <groupId>org.geysermc.geyser</groupId>
+            <artifactId>api</artifactId>
+            <version>2.11.2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- MySQL/SQLite drivers - the original plugin used these for DatabaseManager.

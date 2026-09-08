@@ -9,7 +9,7 @@ $ErrorActionPreference = "Stop"
 
 # ---- EDIT THESE VALUES WHENEVER YOU WANT TO CHANGE WHAT GETS APPLIED ----
 $BStatsId = "32964"
-$BaseVersion = "3.0.6mc26.2"
+$BaseVersion = "3.0.10.01mc26.2"
 $VariantSuffix = @{
     "paper"  = "-ppr"
     "spigot" = "-spig"

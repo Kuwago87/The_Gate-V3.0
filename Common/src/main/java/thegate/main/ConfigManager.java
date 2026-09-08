@@ -88,6 +88,163 @@ public class ConfigManager {
         return !s0.isEmpty();
     }
 
+    /*
+     * Comment-preserving auto-fix for missing config.yml keys, added for the Bedrock-textures update.
+     * A plain pluginConfig.save() would work but strips every comment and reflows the whole file via
+     * SnakeYAML's writer - not acceptable for a heavily-annotated config.yml like this one. Instead this
+     * only splices in the specific missing keys as new lines at the right place, leaving every existing
+     * line (including comments and blank lines) completely untouched.
+     *
+     * Must be called AFTER hasUpdateConfig() - it reads updatedValuesConfig, which hasUpdateConfig()
+     * populates as a side effect. If anything about the file's structure isn't what this expects, it logs
+     * a warning and leaves the file alone rather than risking corrupting it - the existing warning log
+     * (which lists every missing key/value manually) still covers that fallback case.
+     */
+    /**
+     * Returns true only if every missing key was located and inserted successfully - the caller can then
+     * safely skip the "disable until manually fixed" fallback for this run. Returns false (and leaves
+     * whatever DID succeed written to disk anyway - partial progress still helps) if anything couldn't be
+     * confidently placed, so the existing safety behavior (require a manual fix, matching how this worked
+     * before auto-insert existed) still applies for a run where something looked unexpected.
+     */
+    public boolean autoInsertMissingKeys() {
+        if (updatedValuesConfig.isEmpty()) {
+            return true;
+        }
+        try {
+            List<String> lines = new ArrayList<String>(java.nio.file.Files.readAllLines(this.pluginConfigFile.toPath(), java.nio.charset.StandardCharsets.UTF_8));
+
+            // Group every missing leaf path by the deepest parent path that already exists in the deployed
+            // config - e.g. "GateMaterial.BedrockHeadTextures.HONEY_BLOCK" groups under "GateMaterial" if
+            // BedrockHeadTextures itself doesn't exist yet at all, or under "GateMaterial.BedrockHeadTextures"
+            // if a future update just adds one more key to an already-existing BedrockHeadTextures section.
+            Map<String, List<String>> byParent = new java.util.LinkedHashMap<String, List<String>>();
+            for (String fullPath : updatedValuesConfig.keySet()) {
+                String parent = this.deepestExistingParent(fullPath);
+                byParent.computeIfAbsent(parent, k -> new ArrayList<String>()).add(fullPath);
+            }
+
+            // Process bottom-of-file anchors first so earlier insertions don't shift the line numbers
+            // out from under anchors we haven't processed yet.
+            List<Map.Entry<String, List<String>>> anchors = new ArrayList<Map.Entry<String, List<String>>>(byParent.entrySet());
+            anchors.sort((a, b) -> Integer.compare(this.findAnchorLine(lines, b.getKey()), this.findAnchorLine(lines, a.getKey())));
+
+            boolean allResolved = true;
+            for (Map.Entry<String, List<String>> entry : anchors) {
+                String parentPath = entry.getKey();
+                int anchorLine = this.findAnchorLine(lines, parentPath);
+                if (anchorLine < 0) {
+                    allResolved = false;
+                    continue; // couldn't safely locate this anchor - it stays out of the file, but is still listed in the warning log above
+                }
+                int anchorIndent = parentPath.isEmpty() ? -2 : this.indentOf(lines.get(anchorLine));
+                int insertAt = this.findSectionEnd(lines, anchorLine, anchorIndent);
+                List<String> block = this.buildYamlBlock(entry.getValue(), parentPath, anchorIndent + 2);
+                lines.addAll(insertAt, block);
+            }
+
+            java.nio.file.Files.write(this.pluginConfigFile.toPath(), lines, java.nio.charset.StandardCharsets.UTF_8);
+            pluginConfig = YamlConfiguration.loadConfiguration(this.pluginConfigFile);
+            return allResolved;
+        } catch (Exception e) {
+            TheGateMain.theGateMain.getLogger().log(Level.WARNING, "[The Gate] Could not auto-update config.yml - please add the missing options listed above manually. (" + e + ")");
+            return false;
+        }
+    }
+
+    /** Longest dotted-path prefix of fullPath that already exists as a section in the deployed config. Returns "" if not even the first segment exists (meaning: insert as a new top-level section at the end of the file). */
+    private String deepestExistingParent(String fullPath) {
+        String[] segments = fullPath.split("\\.");
+        for (int i = segments.length - 1; i >= 1; i--) {
+            String candidate = String.join(".", java.util.Arrays.copyOfRange(segments, 0, i));
+            if (pluginConfig.isConfigurationSection(candidate)) {
+                return candidate;
+            }
+        }
+        return "";
+    }
+
+    private int indentOf(String line) {
+        int i = 0;
+        while (i < line.length() && line.charAt(i) == ' ') {
+            i++;
+        }
+        return i;
+    }
+
+    /**
+     * Walks the raw file tracking YAML nesting depth by indentation, to find the line that declares the
+     * given dotted key path. Returns lines.size() for the root ("") case as a sentinel meaning "end of
+     * file", or -1 if a non-root path genuinely can't be found (safety fallback - caller skips it).
+     */
+    private int findAnchorLine(List<String> lines, String path) {
+        if (path.isEmpty()) {
+            return lines.size();
+        }
+        String[] target = path.split("\\.");
+        List<String> stack = new ArrayList<String>();
+        List<Integer> stackIndent = new ArrayList<Integer>();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            String trimmed = line.trim();
+            if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                continue;
+            }
+            int indent = this.indentOf(line);
+            while (!stackIndent.isEmpty() && stackIndent.get(stackIndent.size() - 1) >= indent) {
+                stack.remove(stack.size() - 1);
+                stackIndent.remove(stackIndent.size() - 1);
+            }
+            int colon = trimmed.indexOf(':');
+            if (colon < 0) {
+                continue;
+            }
+            String key = trimmed.substring(0, colon).trim();
+            stack.add(key);
+            stackIndent.add(indent);
+            if (stack.size() == target.length && stack.equals(java.util.Arrays.asList(target))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** First line after anchorLine whose indentation is <= anchorIndent (a sibling key, or the parent's own end) - i.e. the correct insertion point for a block nested one level deeper than the anchor. */
+    private int findSectionEnd(List<String> lines, int anchorLine, int anchorIndent) {
+        if (anchorLine >= lines.size()) {
+            return lines.size();
+        }
+        for (int i = anchorLine + 1; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+            if (this.indentOf(line) <= anchorIndent) {
+                return i;
+            }
+        }
+        return lines.size();
+    }
+
+    /** Builds the actual new YAML lines for the missing keys under one parent, correctly nested/indented, using Bukkit's own YamlConfiguration writer so quoting matches the rest of the file. */
+    private List<String> buildYamlBlock(List<String> fullPaths, String parentPath, int childIndentSpaces) {
+        YamlConfiguration temp = new YamlConfiguration();
+        for (String fullPath : fullPaths) {
+            String relative = parentPath.isEmpty() ? fullPath : fullPath.substring(parentPath.length() + 1);
+            temp.set(relative, this.sorcepluginConfig.get(fullPath));
+        }
+        String raw = temp.saveToString();
+        List<String> result = new ArrayList<String>();
+        result.add(" ".repeat(childIndentSpaces) + "# --- auto-added by The_Gate - see the wiki for details on these new options ---");
+        for (String line : raw.split("\n")) {
+            if (line.isBlank()) {
+                continue;
+            }
+            result.add(" ".repeat(childIndentSpaces) + line);
+        }
+        return result;
+    }
+
     public boolean hasUpdateLang() {
         if (this.newLang) {
             return false;

@@ -1,5 +1,5 @@
 name: The_Gate
-version: 3.0.6mc26.2-spig
+version: 3.0.10.01mc26.2-spig
 main: thegate.main.TheGateMain
 load: POSTWORLD
 authors: ['EndMySuffering', 'donner', 'lukas123313']
@@ -19,6 +19,7 @@ softdepend:
   - Multiverse-Core
   - IridiumSkyblock
   - Essentials
+  - Geyser-Spigot
 
 # SPIGOT VARIANT: PacketEvents is not bundled in this build - it must be installed
 # separately as its own plugin. 'depend' (not 'softdepend') because the plugin

@@ -157,7 +157,13 @@ PluginMessageListener {
             this.getLogger().log(Level.WARNING, "https://discord.gg/w5FmUb6DrH");
             this.getLogger().log(Level.WARNING, " ");
             this.getLogger().log(Level.WARNING, "----------------------------------------------------------------------------");
-            missingConfig = true;
+            if (this.configManager.autoInsertMissingKeys()) {
+                this.reloadConfig();
+                Config.LoadConfig((Plugin)this);
+                this.getLogger().log(Level.INFO, "[The Gate] The options listed above were automatically added to your config.yml - no manual edit or restart needed.");
+            } else {
+                missingConfig = true;
+            }
         }
         if (this.configManager.hasUpdateLang()) {
             this.getLogger().log(Level.WARNING, "-------------------------------------------------------------------------------");
@@ -311,7 +317,8 @@ PluginMessageListener {
         ArmorStand stand = ArmorStand.CreateArmorStand(player.getLocation(), 0.0f, 0.0f, 0.0f, 0.0f);
         stand.setHeadMaterial(new ItemStack(Material.STONE));
         PackageManager.SendSpawnPackage(stand, player);
-        PackageManager.SendDespawnPackage(stand.getEntityID(), player);
+        PackageManager.SendDespawnPackage(stand.getJavaEntityID(), player);
+        PackageManager.SendDespawnPackage(stand.getBedrockEntityID(), player);
         this.OnCooldown.add(player.getName());
         GateManager.GateInRadius(player, Globals.VisibilityRadius);
         new BukkitRunnable(){
