@@ -99,7 +99,15 @@ PluginMessageListener {
     @Override
     public void onLoad() {
         com.github.retrooper.packetevents.PacketEvents.setAPI(
-            io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder.build(this)
+            io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder.build(
+                this,
+                new com.github.retrooper.packetevents.settings.PacketEventsSettings().checkForUpdates(false)
+                // The update checker throws NoClassDefFoundError (net.kyori.adventure.util.Buildable$Builder)
+                // at runtime - the shaded PacketEvents copy inside this jar expects a different Adventure
+                // version than what's actually visible on Paper's classloader at that point. The exception is
+                // harmless (caught in its own background thread, never affects gate functionality) but noisy.
+                // Disabling the check entirely avoids it rather than chasing the underlying shading mismatch.
+            )
         );
         com.github.retrooper.packetevents.PacketEvents.getAPI().load();
     }
@@ -138,6 +146,7 @@ PluginMessageListener {
             this.getLogger().log(Level.WARNING, "----------------------------------------------------------------------------");
         }
         Config.LoadConfig((Plugin)this);
+        GeyserSkullSync.sync();
         this.configManager = new ConfigManager((Plugin)this);
         try {
             this.configManager.CreateConfigFiles();
@@ -168,6 +177,7 @@ PluginMessageListener {
             if (this.configManager.autoInsertMissingKeys()) {
                 this.reloadConfig();
                 Config.LoadConfig((Plugin)this);
+                GeyserSkullSync.sync();
                 this.getLogger().log(Level.INFO, "[The Gate] The options listed above were automatically added to your config.yml - no manual edit or restart needed.");
             } else {
                 missingConfig = true;
@@ -204,6 +214,7 @@ PluginMessageListener {
         }
         this.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)this);
         this.registerCommands();
+        new BedrockEquipmentRefresher().runTaskTimer((Plugin)this, 600L, 600L); // every 30s (20 ticks/sec) - see class javadoc for why this exists
         if (Globals.SaveFromat.equalsIgnoreCase("mysql")) {
             try {
                 this.dbManager = new DatabaseManager(DatabaseManager.getDatabaseInfo(Globals.MySQLPath, Globals.MySQLUserName, Globals.MySQLUserPassword, Globals.SaveFromat.toUpperCase()));

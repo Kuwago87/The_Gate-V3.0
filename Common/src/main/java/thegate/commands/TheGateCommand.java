@@ -44,6 +44,7 @@ import thegate.gate.GateManager;
 import thegate.gate.GateObject;
 import thegate.main.Config;
 import thegate.main.ConfigManager;
+import thegate.main.GeyserSkullSync;
 import thegate.main.Globals;
 import thegate.main.Perms;
 import thegate.main.TheGateMain;
@@ -611,6 +612,7 @@ implements TabExecutor {
             if (p.hasPermission(Perms.thegate_admin_reloadconfig.value())) {
                 TheGateMain.theGateMain.reloadConfig();
                 Config.LoadConfig((Plugin)TheGateMain.theGateMain);
+                GeyserSkullSync.sync();
                 TheGateMain.theGateMain.configManager.CreateConfigFiles();
                 GateManager.repairAll();
                 p.sendMessage(ConfigManager.getString("PlayerMessages.GlobalText.ConfigReload", new String[0]));
@@ -619,6 +621,7 @@ implements TabExecutor {
         }
         TheGateMain.theGateMain.reloadConfig();
         Config.LoadConfig((Plugin)TheGateMain.theGateMain);
+        GeyserSkullSync.sync();
         TheGateMain.theGateMain.configManager.CreateConfigFiles();
         GateManager.setGatesOnOtherServer(TheGateMain.SaveLoadInterface.GateListOtherServers());
         GateManager.repairAll();

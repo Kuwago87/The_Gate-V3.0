@@ -88,7 +88,7 @@ public class ArmorStand {
         this.javaMeta = (ArmorStandMeta) javaEntity.getEntityMeta();
         this.bedrockEntity = bedrockEntity;
         this.bedrockMeta = (ArmorStandMeta) bedrockEntity.getEntityMeta();
-        this.bedrockMeta.setInvisible(false); // permanent - see class-level note. Never touched again after this.
+        this.bedrockMeta.setInvisible(true); // permanent - see class-level note. Never touched again after this.
     }
 
     public static ArmorStand CreateArmorStand(org.bukkit.Location location, float headRotationX, float headRotationY, float headRotationZ, float rotBody) {

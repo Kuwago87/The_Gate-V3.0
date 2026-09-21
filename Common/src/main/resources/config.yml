@@ -165,13 +165,13 @@ GateMaterial:
   # These correspond to the Default-*-Material values above - if you change a gate's material to
   # something not listed here, that material just won't be texture-corrected on Bedrock.
   BedrockHeadTextures:
-    SOUL_SAND: ""
-    LIGHT_GRAY_TERRACOTTA: ""
-    HONEY_BLOCK: ""
-    SLIME_BLOCK: ""
-    BLUE_STAINED_GLASS_PANE: ""
-    RED_STAINED_GLASS: ""
- 
+    SOUL_SAND: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjFjZjVhMzRhNzcyMWUyOTk4N2E5YjI5ZTFhNWJmMzI0MTgzNTNlYWQwOTgxZmMzOGJmZmQ4MDJjZGQzYzYzMiJ9fX0="
+    LIGHT_GRAY_TERRACOTTA: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY1NWE1NzYzOWM5ZjdkYmIyNDZiMjhhMjkyY2ZmMjk4MzQ0Yzk2OWNmZDQyNTI3MDlkNGE1ZmE2NjMxMjhiOSJ9fX0="
+    HONEY_BLOCK: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGE3ZTBkNTVlYTgwNTE1Njk5NTVkYTEzODY5NzE3NGEwYmQ3NjE5MGIyZDU4Yjk5NzUwOTczN2RjZTVmYjYxZiJ9fX0="
+    SLIME_BLOCK: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmIxZTc5NTdmZWI4NTUxMjQxZmExZTkxODEzNTZiYzBkZjU2YTIzMzIzNjE0YTg4Y2E1ZmVkNGRjYmY2YzJlIn19fQ=="
+    BLUE_STAINED_GLASS_PANE: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDgzOWU0OTA5NjIxZGJkNjA2MTdjMWU1Y2YwZWYzZGIyMWEwMWZmODNkM2Q1MGRhNzFiYjJkYWViNmZmMDg3MCJ9fX0="
+    RED_STAINED_GLASS: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTVlZmZjZTEwOWRlNTBmNTg1M2IwYzMyZGNjMWEyOGNmNjJhNTA0YjYxMGU3MWUyMmYxZmRlNmZjMWE0YjkzZCJ9fX0="
+
 ToolCustomization:
   #if the item is of value and players get permission to access these tools
   #you may want to change them to prevent selling them as materials

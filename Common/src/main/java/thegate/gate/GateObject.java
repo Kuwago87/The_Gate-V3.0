@@ -302,6 +302,16 @@ public class GateObject {
 
     public void removePlayerInRangeDisconnect(Player p) {
         if (this.PlayerInRange.contains(p)) {
+            // Fixed: this used to only drop the player from the PlayerInRange bookkeeping list without ever
+            // actually despawning the gate's fake entities for them. That leaves this player's UUID
+            // permanently registered as a viewer on every gate part's WrapperEntity (both the Java and
+            // Bedrock twins - see ArmorStand.java), with no way to know they disconnected. On Java this went
+            // unnoticed because a fresh addViewer() call on rejoin still resends the spawn packets
+            // regardless of prior state. Bedrock (via Geyser) does not tolerate that the same way - the
+            // stale viewer entry from the previous session is why the gate silently stops appearing after a
+            // relog specifically on Bedrock. Properly vanishing for this player on disconnect fixes both
+            // platforms' viewer-tracking state, not just the visible Bedrock symptom.
+            this.Vanish(p);
             this.PlayerInRange.remove(p);
         }
     }

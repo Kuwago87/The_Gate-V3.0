@@ -68,7 +68,10 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>[26.2.build,)</version>
+            <!-- Capped at 26.3 (exclusive) until PacketEvents releases stable 26.3 support - see
+                 https://github.com/retrooper/packetevents/pull/1582 (open, WIP as of this writing).
+                 Remove this upper bound once that ships and this plugin is actually tested against it. -->
+            <version>[26.2.build,26.3.build)</version>
             <scope>provided</scope>
         </dependency>
 
