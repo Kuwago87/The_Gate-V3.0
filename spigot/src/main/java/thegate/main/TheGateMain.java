@@ -199,6 +199,7 @@ PluginMessageListener {
         this.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)this);
         this.registerCommands();
         new BedrockEquipmentRefresher().runTaskTimer((Plugin)this, 600L, 600L); // every 30s (20 ticks/sec) - see class javadoc for why this exists
+        new GateUpdateChecker().runTaskLaterAsynchronously((Plugin)this, 100L); // once, 5s after startup - see class javadoc
         if (Globals.SaveFromat.equalsIgnoreCase("mysql")) {
             try {
                 this.dbManager = new DatabaseManager(DatabaseManager.getDatabaseInfo(Globals.MySQLPath, Globals.MySQLUserName, Globals.MySQLUserPassword, Globals.SaveFromat.toUpperCase()));
